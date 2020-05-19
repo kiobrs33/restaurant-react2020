@@ -1,0 +1,30 @@
+.bg-login {
+    background-image: url("../img/fondo.png");
+    min-height: 100vh;
+}
+
+.btn-login {
+    background-color: #ffb396;
+    border-radius: 20px;
+}
+
+.input-login {
+    border-radius: 20px;
+}
+
+.card-login {
+    background: #ace0d3;
+    position: relative;
+    top: -40px;
+}
+
+.img-login {
+    background-image: url("../img/img_login.svg");
+    height: 150px;
+    width: 200px;
+    background-size: 100% 100%;
+    position: relative;
+    left: 180px;
+    top: -15px;
+    z-index: 1;
+}
