@@ -1,6 +1,16 @@
 import React from "react";
 
-import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
+import {
+   Card,
+   CardHeader,
+   CardBody,
+   CardTitle,
+   Row,
+   Col,
+   Toast,
+   ToastBody,
+   ToastHeader,
+} from "reactstrap";
 
 // Importando METODOS para la conexion con la STORE de REDUX
 import { connect } from "react-redux";
@@ -12,8 +22,15 @@ import io from "socket.io-client";
 import TableOrders from "./TableOrders";
 
 class Orders extends React.Component {
+   state = {
+      visible: false,
+   };
    handleReceiveOrder = () => {
       this.props.history.push("/recepcionist/orders/receive_order");
+   };
+
+   handleOnDismiss = () => {
+      this.setState({ visible: false });
    };
 
    componentDidMount = () => {
@@ -22,8 +39,8 @@ class Orders extends React.Component {
 
       this.socket = io("https://rest-back-end.herokuapp.com");
       // this.socket = io("http://192.168.0.4:3000");
-      this.socket.on("newOrderGenerated", (sms) => {
-         console.log(sms);
+      this.socket.on("newOrderGenerated", (data) => {
+         // this.setState({ visible: true });
          this.props.startGetOrders();
       });
    };
@@ -32,14 +49,40 @@ class Orders extends React.Component {
       return (
          <>
             <div className="content">
+               {/* <Alert
+                  color="info"
+                  isOpen={this.state.visible}
+                  toggle={this.handleOnDismiss}
+               >
+                  I am an alert and I can be dismissed!
+               </Alert> */}
+               <div className="">
+                  <div
+                  // style={{
+                  //    position: "absolute",
+                  //    top: "2",
+                  //    right: "0",
+                  // }}
+                  >
+                     <Toast isOpen={this.state.visible}>
+                        <ToastHeader
+                           icon="primary"
+                           toggle={this.handleOnDismiss}
+                        >
+                           Nuevo Pedido!
+                        </ToastHeader>
+                        <ToastBody>Ver la lista de Pedidos!</ToastBody>
+                     </Toast>
+                  </div>
+               </div>
                <Row>
                   <Col md="12">
                      <Card>
                         <CardHeader>
-                           <CardTitle tag="h4">Simple Table</CardTitle>
+                           <CardTitle tag="h4">Pedidos</CardTitle>
                         </CardHeader>
                         <CardBody>
-                           <TableOrders />
+                           <TableOrders {...this.props} />
                         </CardBody>
                      </Card>
                   </Col>

@@ -60,7 +60,7 @@ class Dashboard extends React.Component {
                <DemoNavbar {...this.props} />
                <Switch>
                   <Route
-                     path="/recepcionist/orders/receive_order"
+                     path="/recepcionist/orders/receive_order/:idOrder"
                      component={ReceiveOrder}
                   />
                   {routes.map((prop, key) => {

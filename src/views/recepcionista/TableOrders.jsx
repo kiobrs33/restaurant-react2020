@@ -1,129 +1,94 @@
 import React from "react";
 
-import { Table, Button } from "reactstrap";
+import { Table, Button, Spinner } from "reactstrap";
 
 // Importando METODOS para la conexion con la STORE de REDUX
 import { connect } from "react-redux";
 
 class TableOrders extends React.Component {
-   handleReceiveOrder = () => {
-      this.props.history.push("/recepcionist/orders/receive_order");
+   handleReceiveOrder = (id) => {
+      this.props.history.push(`/recepcionist/orders/receive_order/${id}`);
    };
 
    render() {
       const { orders } = this.props;
-      console.log(orders);
       return (
          <Table striped responsive>
             <thead className="text-primary">
                <tr>
-                  <th width="5%">Orden ID</th>
-                  <th>CLiente ID</th>
+                  <th></th>
+                  <th>Estado</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>
                   <th>Fecha Pedido</th>
-                  <th width="15%">Estado</th>
                   <th width="10%">Accion</th>
                </tr>
             </thead>
             <tbody>
-               {orders.map((o) => (
-                  <tr key={o._id}>
-                     <td>{o._id.substring(5, 10)}</td>
-                     <td>324323</td>
-                     <td>{o.id_user.info.name}</td>
-                     <td>{o.id_user.info.lastname}</td>
-                     <td>{o.date.date_issue}</td>
-                     <td>No se sabe</td>
-                     <td>
-                        <Button
-                           color="info"
-                           className="btn-round"
-                           size="sm"
-                           onClick={this.handleReceiveOrder}
-                           block
-                        >
-                           ver
-                        </Button>
-                     </td>
-                  </tr>
-               ))}
-               {/* <tr>
-                     <td>1</td>
-                     <td>324323</td>
-                     <td>Rene Edgard</td>
-                     <td>Lozano Ramos</td>
-                     <td>12/12/2020 13:45</td>
-                     <td className="bg-danger text-center">Pendiente</td>
-                     <td>
-                        <Button
-                           color="info"
-                           className="btn-round"
-                           size="sm"
-                           onClick={this.handleReceiveOrder}
-                           block
-                        >
-                           ver
-                        </Button>
-                     </td>
-                  </tr>
+               {orders.length === 0 ? (
                   <tr>
-                     <td>1</td>
-                     <td>324323</td>
-                     <td>Rene Edgard</td>
-                     <td>Lozano Ramos</td>
-                     <td>12/12/2020 13:45</td>
-                     <td className="bg-warning text-center">Atendiendolo</td>
-                     <td>
-                        <Button
-                           color="info"
-                           className="btn-round"
-                           size="sm"
-                           onClick={this.handleReceiveOrder}
-                           block
-                        >
-                           ver
-                        </Button>
+                     <td colSpan="6" className="text-center">
+                        <Spinner
+                           style={{ width: "10rem", height: "10rem" }}
+                           color="success"
+                        />
                      </td>
                   </tr>
-                  <tr>
-                     <td>1</td>
-                     <td>324323</td>
-                     <td>Rene Edgard</td>
-                     <td>Lozano Ramos</td>
-                     <td>12/12/2020 13:45</td>
-                     <td className="bg-primary text-center">En camino</td>
-                     <td>
-                        <Button
-                           color="info"
-                           className="btn-round"
-                           size="sm"
-                           onClick={this.handleReceiveOrder}
-                           block
-                        >
-                           ver
-                        </Button>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td>1</td>
-                     <td>324323</td>
-                     <td>Rene Edgard</td>
-                     <td>Lozano Ramos</td>
-                     <td>12/12/2020 13:45</td>
-                     <td className="bg-success text-center">Entregado</td>
-                     <td>
-                        <Button
-                           color="info"
-                           className="btn-round"
-                           size="sm"
-                           block
-                           onClick={this.handleReceiveOrder}
-                        >
-                           ver
-                        </Button>
-                     </td>
-                  </tr> */}
+               ) : (
+                  orders.map((o) => (
+                     <tr key={o._id}>
+                        <td className="text-center">
+                           {o.state === "send" ? (
+                              <Spinner type="grow" color="primary" />
+                           ) : o.state === "accepted" ? (
+                              <Spinner type="grow" color="info" />
+                           ) : o.state === "denied" ? (
+                              <Spinner type="grow" color="danger" />
+                           ) : o.state === "roading" ? (
+                              <Spinner type="grow" color="dark" />
+                           ) : o.state === "finish" ? (
+                              <Spinner type="grow" color="success" />
+                           ) : o.state === "incomplete" ? (
+                              <Spinner type="grow" color="warning" />
+                           ) : (
+                              "N/T"
+                           )}
+                        </td>
+                        <td>
+                           {o.state === "send" ? (
+                              <b className="text-primary">Recibido</b>
+                           ) : o.state === "accepted" ? (
+                              <b className="text-info">Aceptado</b>
+                           ) : o.state === "denied" ? (
+                              <b className="text-danger">Denegado</b>
+                           ) : o.state === "roading" ? (
+                              <b className="text-dark">Atendido</b>
+                           ) : o.state === "finish" ? (
+                              <b className="success">Entregado</b>
+                           ) : o.state === "incomplete" ? (
+                              <b className="text-primary">Incompleto</b>
+                           ) : (
+                              <b>Sin estado</b>
+                           )}
+                        </td>
+                        <td>{o.id_user.info.name}</td>
+                        <td>{o.id_user.info.lastname}</td>
+                        <td>{o.date.date_issue}</td>
+                        <td>
+                           <Button
+                              type="button"
+                              color="info"
+                              className="btn-round"
+                              size="sm"
+                              onClick={() => this.handleReceiveOrder(o._id)}
+                              block
+                           >
+                              ver
+                           </Button>
+                        </td>
+                     </tr>
+                  ))
+               )}
             </tbody>
          </Table>
       );

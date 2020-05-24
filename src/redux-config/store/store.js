@@ -7,7 +7,12 @@ import rootSaga from "../sagas/main";
 import { reducers } from "../reducers/reducers";
 
 // Inciando UN OBJETO VACIO COMO ESTADO INICIAL del STORE
-const estadoInicial = { orders: [] };
+const estadoInicial = {
+   orders: [],
+   receiveOrder: {},
+   workersSenders: [],
+   dishes: [],
+};
 
 // Para utilizar DEEVTOOLS con MIDDLEWARE
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
