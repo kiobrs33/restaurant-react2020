@@ -3,6 +3,10 @@ import {
    END_GET_ORDERS,
    END_GET_ORDER,
    END_GET_SENDERS,
+   END_GET_DISHES,
+   END_GET_CATEGORIES,
+   END_GET_CUSTOMERS,
+   END_GET_CUSTOMER,
 } from "../actions/actions";
 
 // reducer recibe el estado ACTUAL DEL STORE Y AGREGA DATOS dependiendo a la accion
@@ -29,6 +33,26 @@ export const reducers = (estado, accion) => {
          return {
             ...estado,
             workersSenders: accion.senders,
+         };
+      case END_GET_DISHES:
+         return {
+            ...estado,
+            dishes: accion.dishes,
+         };
+      case END_GET_CATEGORIES:
+         return {
+            ...estado,
+            categories: accion.categories,
+         };
+      case END_GET_CUSTOMERS:
+         return {
+            ...estado,
+            customers: accion.customers,
+         };
+      case END_GET_CUSTOMER:
+         return {
+            ...estado,
+            customer: accion.customer,
          };
       // case NEW_ORDER:
       //    return {

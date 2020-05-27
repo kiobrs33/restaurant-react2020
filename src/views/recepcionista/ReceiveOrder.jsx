@@ -25,6 +25,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 
+// MAPAS
+import Map from "../administrador/googlemaps/GoogleMap";
+
 import user from "../../assets/img/default-avatar.png";
 
 class ReceiveOrder extends React.Component {
@@ -62,16 +65,28 @@ class ReceiveOrder extends React.Component {
 
    // Funcion para lanzar ATENDER EL PEDIDO
    handleSubmit = (event) => {
+      var fecha = new Date(); //Fecha actual
+      var mes = fecha.getMonth() + 1; //obteniendo mes
+      var dia = fecha.getDate(); //obteniendo dia
+      var ano = fecha.getFullYear();
+      console.log(fecha);
+
+      var dateh = Date.parse(`${ano}/${mes}/${dia}`);
+
       this.props.startSubmitOrder(
          "roading",
          this.state.id_order,
-         this.state.id_sender
+         this.state.id_sender,
+         `${ano}/${mes}/${dia}`
       );
       this.props.history.push("/recepcionist/orders");
       event.preventDefault();
    };
 
    render() {
+      // URL MAP
+      const mapURL =
+         "https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDBUCi_YsR1AQdmx48i3x1ZIBV5hQ4015Q";
       const { order, workersSenders } = this.props;
       if (order.id_user) {
          var id_pedido = order._id;
@@ -80,9 +95,9 @@ class ReceiveOrder extends React.Component {
          var apellidos_cliente = order.id_user.info.lastname;
          var direccion_pedido = order.adress.adress_name;
          var detalles_pedidos = order.details_orders;
+         console.log(order.adress.adress_latitud);
       }
 
-      var sutotal, total;
       return (
          <>
             <div className="content">
@@ -199,7 +214,7 @@ class ReceiveOrder extends React.Component {
                                           </tr>
                                           <tr>
                                              <th>Total:</th>
-                                             <td>{total}</td>
+                                             <td>0</td>
                                           </tr>
                                        </tbody>
                                     </Table>
@@ -274,6 +289,34 @@ class ReceiveOrder extends React.Component {
                                        : "Seleccionar"}
                                  </h4>
                               </div>
+                              <div>
+                                 {order.adress ? (
+                                    <Map
+                                       googleMapURL={mapURL}
+                                       containerElement={
+                                          <div style={{ height: "400px" }} />
+                                       }
+                                       mapElement={
+                                          <div style={{ height: "400px" }} />
+                                       }
+                                       loadingElement={<p>Cargando...</p>}
+                                       mainPosition={{
+                                          lat: -16.453110907152375,
+                                          lng: -71.53251157820684,
+                                       }}
+                                       clientPosition={{
+                                          lat: parseFloat(
+                                             order.adress.adress_latitud
+                                          ),
+                                          lng: parseFloat(
+                                             order.adress.adress_longitud
+                                          ),
+                                       }}
+                                    />
+                                 ) : (
+                                    "Cargando"
+                                 )}
+                              </div>
                               <Row className="justify-content-between">
                                  <Col xs="6" md="3">
                                     <Button
@@ -316,8 +359,8 @@ ReceiveOrder.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
    startGetOrder: (id_order) => dispatch(startGetOrder(id_order)),
    startGetSenders: () => dispatch(startGetSenders()),
-   startSubmitOrder: (state_order, id_order, id_sender) =>
-      dispatch(startSubmitOrder(state_order, id_order, id_sender)),
+   startSubmitOrder: (state_order, id_order, id_sender, fecha) =>
+      dispatch(startSubmitOrder(state_order, id_order, id_sender, fecha)),
 });
 
 const mapStateToProps = (state) => ({

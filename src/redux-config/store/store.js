@@ -12,6 +12,9 @@ const estadoInicial = {
    receiveOrder: {},
    workersSenders: [],
    dishes: [],
+   categories: [],
+   customers: [],
+   customer: {},
 };
 
 // Para utilizar DEEVTOOLS con MIDDLEWARE

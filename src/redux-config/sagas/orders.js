@@ -7,45 +7,60 @@ import {
    START_GET_SENDERS,
    END_GET_SENDERS,
    START_SUBMIT_ORDER,
-} from "redux-config/actions/actions";
-// import axios from "axios";
+} from "../actions/actions";
+
+// APICALL - (METHOD, URL, HEADERS, DATA)
 import apiCall from "../api/apiCall";
 
-// Aqui las funciones respresentan PETICIONES A LA API - CRUD
+const mainUrl = "https://rest-back-end.herokuapp.com";
+
+// Obteniendo PEDIDOS
 function* getOrders() {
    try {
-      const result = yield call(
-         apiCall,
-         "get",
-         "http://localhost:3001/api/orders/all",
-         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0"
-      );
+      const result = yield call(apiCall, "GET", `${mainUrl}/api/orders/all`, {
+         token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
+      });
       yield put({ type: END_GET_ORDERS, orders: result.orders });
-   } catch (error) {}
+   } catch (error) {
+      console.log(error);
+   }
 }
 
+// Obteniendo INFORMACION DEL PEDIDO
 function* getOrder(action) {
    try {
       const result = yield call(
          apiCall,
-         "get",
-         `http://localhost:3001/api/orders/showOne/${action.id_order}`,
-         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0"
+         "GET",
+         `${mainUrl}/api/orders/showOne/${action.id_order}`,
+         {
+            token:
+               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
+         }
       );
       yield put({ type: END_GET_ORDER, order: result.data });
-   } catch (error) {}
+   } catch (error) {
+      console.log(error);
+   }
 }
 
+// Obteniendo TRABAJADORES del tipo REMITENTE
 function* getSenders() {
    try {
       const result = yield call(
          apiCall,
-         "get",
-         "http://localhost:3001/api/worker/all_Workers_Senders",
-         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0"
+         "GET",
+         `${mainUrl}/api/worker/all_Workers_Senders`,
+         {
+            token:
+               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
+         }
       );
       yield put({ type: END_GET_SENDERS, senders: result.data });
-   } catch (error) {}
+   } catch (error) {
+      console.log(error);
+   }
 }
 
 function* submitOrder(action) {
@@ -53,20 +68,31 @@ function* submitOrder(action) {
       // Actulizando EL ESTADO DE LA ORDEN
       const result1 = yield call(
          apiCall,
-         "put",
-         `http://localhost:3001/api/orders/update/${action.id_order}`,
-         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
-         { state: action.state_order }
+         "PUT",
+         `${mainUrl}/api/orders/update/${action.id_order}`,
+         {
+            token:
+               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
+            "Content-Type": "application/json",
+         },
+         // { state: action.state_order }
+         JSON.stringify({
+            state: action.state_order,
+            "date.date_acceptance": action.fecha,
+         })
       );
 
       const result2 = yield call(
          apiCall,
-         "put",
-         `http://localhost:3001/api/worker/update_orders_worker/${action.id_sender}`,
-         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
-         { id_order: action.id_order }
+         "PUT",
+         `${mainUrl}/api/worker/update_orders_worker/${action.id_sender}`,
+         {
+            token:
+               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoia2lvYnJzMzMiLCJwYXNzd29yZCI6IiQyYSQxMCQvbVVoRFkwbzE3UDN4NmpieHQ2SzZPUzc5TFYxZWFrTDQyQVdSZUg1T1NOQzdkMEN3b1Y1QyIsImlhdCI6MTU4ODQ4ODM4MSwiZXhwIjoxNTkxMDgwMzgxfQ.YQy316pqdUfVcjSmUVGBO0DRdSGRK0wj7KLzcHNDjt0",
+            "Content-Type": "application/json",
+         },
+         JSON.stringify({ id_order: action.id_order })
       );
-      // yield put({ type: END_GET_SENDERS, senders: result.workers });
    } catch (error) {
       console.log(error);
    }
@@ -74,7 +100,7 @@ function* submitOrder(action) {
 
 // WATCHERS
 // Exporta todas las funciones
-// Cada Funcion ESTA al tanto y escuchando todas las ACCIONES QUE SE DISPAREN
+// Cada FUNCION ESCUCHANDO todas las ACCIONES QUE SE DISPAREN desde los componentes
 export default function* orders() {
    yield takeLatest(START_GET_ORDERS, getOrders);
    yield takeLatest(START_GET_ORDER, getOrder);

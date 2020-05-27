@@ -28,7 +28,8 @@ import UpgradeToPro from "views/Upgrade.jsx";
 // Vistas DISHES
 import Dishes from "views/administrador/dishes/DishesContainer";
 import Employees from "views/administrador/employees/Employees";
-import Customers from "views/administrador/customers/Customers";
+import Customers from "views/administrador/customers/CustomersContainer";
+import Categories from "views/administrador/categories/CategoriesContainer";
 
 var routes = [
    {
@@ -106,6 +107,13 @@ var routes = [
       name: "Clientes",
       icon: "nc-icon nc-spaceship",
       component: Customers,
+      layout: "/admin",
+   },
+   {
+      path: "/categories",
+      name: "Categorias",
+      icon: "nc-icon nc-spaceship",
+      component: Categories,
       layout: "/admin",
    },
 ];

@@ -4,19 +4,16 @@ import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
 // Importando METODOS para la conexion con la STORE de REDUX
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {
-   startGetDishes,
-   startGetCategories,
-} from "../../../redux-config/actions/actions";
+import { startGetCategories } from "../../../redux-config/actions/actions";
 
-import TableDishes from "./TableDishes";
+import TableCategories from "./TableCategories";
 
-class DishesContainer extends React.Component {
+class CategoriesContainer extends React.Component {
    componentDidMount = () => {
-      this.props.startGetDishes();
+      this.props.startGetCategories();
    };
    render() {
-      const { dishes } = this.props;
+      const { categories } = this.props;
 
       return (
          <div className="content">
@@ -25,13 +22,14 @@ class DishesContainer extends React.Component {
                   <Card>
                      <CardHeader>
                         <CardTitle tag="h4">Lista de Platos</CardTitle>
-                        <p className="card-category">
-                           Todos los platos del restaurant
-                        </p>
+                        <p className="card-category">Categorias</p>
                      </CardHeader>
                      <CardBody>
-                        {dishes.length !== 0 ? (
-                           <TableDishes dishes={dishes} {...this.props} />
+                        {categories.length !== 0 ? (
+                           <TableCategories
+                              categories={categories}
+                              {...this.props}
+                           />
                         ) : (
                            "Cargando"
                         )}
@@ -45,22 +43,22 @@ class DishesContainer extends React.Component {
 }
 
 // Validacion de Props
-DishesContainer.propTypes = {
-   startGetDishes: PropTypes.func.isRequired,
+CategoriesContainer.propTypes = {
+   startGetCategories: PropTypes.func.isRequired,
 };
 
 // Acciones
 const mapDispatchToProps = (dispatch) => ({
-   startGetDishes: () => dispatch(startGetDishes()),
+   startGetCategories: () => dispatch(startGetCategories()),
 });
 const mapStateToProps = (state) => ({
-   dishes: state.dishes,
+   categories: state.categories,
 });
 
 // Insertando nuevas propiedades al Componente
-const DishesContainerConectado = connect(
+const CategoriesContainerConectado = connect(
    mapStateToProps,
    mapDispatchToProps
-)(DishesContainer);
+)(CategoriesContainer);
 
-export default DishesContainerConectado;
+export default CategoriesContainerConectado;

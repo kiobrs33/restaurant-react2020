@@ -15,52 +15,34 @@ import {
 // Importando METODOS para la conexion con la STORE de REDUX
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {
-   startGetCategories,
-   submitNewDish,
-} from "../../../redux-config/actions/actions";
+import { startGetCustomer } from "../../../redux-config/actions/actions";
 
 // Importando ICONOS FONTAWESOME
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 
 // Importando Imagenes
-import sinImagen from "../../../assets/img/sin-image.jpg";
+import img123 from "../../../assets/img/faces/ayo-ogunseinde-1.jpg";
 
-class NewDish extends React.Component {
-   state = {
-      name: "",
-      price: 0,
-      archivo: "",
-      id_category: "",
-   };
-   handleListDishes = () => {
-      this.props.history.push("/admin/dishes");
+class ShowCustomer extends React.Component {
+   state = {};
+   handleListCustomers = () => {
+      this.props.history.push("/admin/customers");
    };
    handleChanges = (e) => {
       this.setState({ [e.target.name]: e.target.value });
    };
 
-   handleChangesFiles = (e) => {
-      let files = e.target.files;
-      this.setState({ archivo: files[0] });
-   };
-
    handleSubmit = (e) => {
-      const { name, price, archivo, id_category } = this.state;
-      this.props.submitNewDish({
-         name,
-         price,
-         archivo,
-         id_category,
-      });
       e.preventDefault();
    };
    componentDidMount = () => {
-      this.props.startGetCategories({});
+      let id_customer = this.props.match.params.idCustomer;
+      this.props.startGetCustomer(id_customer);
    };
    render() {
-      const { categories } = this.props;
+      let { customer } = this.props;
+
       return (
          <>
             <div className="content">
@@ -68,7 +50,9 @@ class NewDish extends React.Component {
                   <Col md="10">
                      <Card className="card-user">
                         <CardHeader>
-                           <CardTitle tag="h5">Nuevo plato</CardTitle>
+                           <CardTitle tag="h5">
+                              Informacion del Cliente
+                           </CardTitle>
                         </CardHeader>
                         <CardBody>
                            <Form onSubmit={this.handleSubmit}>
@@ -79,7 +63,7 @@ class NewDish extends React.Component {
                                           alt="..."
                                           height="150px"
                                           align="center"
-                                          src={sinImagen}
+                                          src={img123}
                                        />
                                     </div>
                                  </Col>
@@ -92,83 +76,74 @@ class NewDish extends React.Component {
                                                 placeholder="nombre producto"
                                                 type="text"
                                                 name="name"
-                                                onChange={this.handleChanges}
-                                                value={this.state.name}
+                                                value={
+                                                   customer.info
+                                                      ? customer.info.name
+                                                      : "Cargando"
+                                                }
+                                                readOnly
                                              />
                                           </FormGroup>
                                        </Col>
                                        <Col md="6">
                                           <FormGroup>
-                                             <label>Precio</label>
+                                             <label>Apellidos</label>
                                              <Input
                                                 placeholder="precio producto"
                                                 type="number"
-                                                name="price"
-                                                onChange={this.handleChanges}
-                                                value={this.state.price}
+                                                name="lastname"
+                                                value={
+                                                   customer.info
+                                                      ? customer.info.lastname
+                                                      : "Cargando"
+                                                }
+                                                readOnly
                                              />
                                           </FormGroup>
                                        </Col>
                                        <Col md="6">
                                           <FormGroup>
-                                             <label>Categoria</label>
+                                             <label>Telefono</label>
                                              <Input
-                                                type="select"
-                                                name="id_category"
-                                                onChange={this.handleChanges}
-                                             >
-                                                <option value="">
-                                                   Seleccione
-                                                </option>
-                                                {categories.map((c) => (
-                                                   <option
-                                                      key={c._id}
-                                                      value={c._id}
-                                                   >
-                                                      {c.name}
-                                                   </option>
-                                                ))}
-                                             </Input>
+                                                placeholder="precio producto"
+                                                type="number"
+                                                name="telefono"
+                                                value={
+                                                   customer.info
+                                                      ? customer.info.telefono
+                                                      : "Cargando"
+                                                }
+                                                readOnly
+                                             />
                                           </FormGroup>
                                        </Col>
                                     </Row>
                                  </Col>
                               </Row>
-                              <input
-                                 type="file"
-                                 name="archivo"
-                                 onChange={this.handleChangesFiles}
-                              />
                               <Row className="mt-2">
                                  <Col md="12">
                                     <FormGroup>
-                                       <label>Ingredientes</label>
+                                       <label>Dni</label>
                                        <Input
                                           type="textarea"
                                           placeholder="Ingredientes del platillo"
-                                          onChange={this.handleChanges}
+                                          value={
+                                             customer.info
+                                                ? customer.info.DNI
+                                                : "Cargando"
+                                          }
+                                          readOnly
                                        />
                                     </FormGroup>
                                  </Col>
                               </Row>
-                              <Row>
-                                 <Col md="12">
-                                    <FormGroup>
-                                       <label>Descripcion</label>
-                                       <Input
-                                          type="textarea"
-                                          rows="5"
-                                          placeholder="Descripcion del platillo"
-                                       />
-                                    </FormGroup>
-                                 </Col>
-                              </Row>
+
                               <Row className="justify-content-between">
                                  <Col xs="6" md="3">
                                     <Button
                                        className="btn-round"
                                        color="danger"
-                                       onClick={this.handleListDishes}
+                                       onClick={this.handleListCustomers}
                                        block
                                     >
                                        <FontAwesomeIcon icon={faArrowLeft} />{" "}
@@ -176,14 +151,14 @@ class NewDish extends React.Component {
                                     </Button>
                                  </Col>
                                  <Col xs="6" md="3">
-                                    <Button
+                                    {/* <Button
                                        type="submit"
                                        className="btn-round"
                                        color="success"
                                        block
                                     >
                                        <FontAwesomeIcon icon={faSave} /> Guardar
-                                    </Button>
+                                    </Button> */}
                                  </Col>
                               </Row>
                            </Form>
@@ -198,21 +173,22 @@ class NewDish extends React.Component {
 }
 
 // Validacion de Props
-NewDish.propTypes = {
-   startGetCategories: PropTypes.func.isRequired,
-   submitNewDish: PropTypes.func.isRequired,
+ShowCustomer.propTypes = {
+   startGetCustomer: PropTypes.func.isRequired,
 };
 
 // Acciones
 const mapDispatchToProps = (dispatch) => ({
-   startGetCategories: () => dispatch(startGetCategories()),
-   submitNewDish: (data) => dispatch(submitNewDish(data)),
+   startGetCustomer: (id_customer) => dispatch(startGetCustomer(id_customer)),
 });
 const mapStateToProps = (state) => ({
-   categories: state.categories,
+   customer: state.customer,
 });
 
 // Insertando nuevas propiedades al Componente
-const NewDishConectado = connect(mapStateToProps, mapDispatchToProps)(NewDish);
+const ShowCustomerConected = connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(ShowCustomer);
 
-export default NewDishConectado;
+export default ShowCustomerConected;
