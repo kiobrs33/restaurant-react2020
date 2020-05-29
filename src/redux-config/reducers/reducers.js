@@ -1,5 +1,5 @@
 import {
-   SET_LOGIN,
+   END_SET_LOGIN,
    END_GET_ORDERS,
    END_GET_ORDER,
    END_GET_SENDERS,
@@ -12,11 +12,10 @@ import {
 // reducer recibe el estado ACTUAL DEL STORE Y AGREGA DATOS dependiendo a la accion
 export const reducers = (estado, accion) => {
    switch (accion.type) {
-      case SET_LOGIN:
+      case END_SET_LOGIN:
          return {
             ...estado,
-            usuario: accion.username,
-            password: accion.password,
+            token: accion.token,
          };
       case END_GET_ORDER:
          // console.log(accion.order);

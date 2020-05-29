@@ -1,30 +1,62 @@
 .bg-login {
-    background-image: url("../img/fondo.png");
-    min-height: 100vh;
+   background-image: url("../img/fnrata.png");
+   min-height: 100vh;
 }
 
 .btn-login {
-    background-color: #ffb396;
-    border-radius: 20px;
+   /* background-color: #ffb396; */
+   border-radius: 20px;
+   background: #8e2de2; /* fallback for old browsers */
+   background-image: linear-gradient(
+      to right,
+      #b8cbb8 0%,
+      #b8cbb8 0%,
+      #b465da 0%,
+      #cf6cc9 33%,
+      #ee609c 66%,
+      #ee609c 100%
+   );
 }
 
 .input-login {
-    border-radius: 20px;
+   border-radius: 20px;
 }
 
 .card-login {
-    background: #ace0d3;
-    position: relative;
-    top: -40px;
+   background: #ace0d3;
+   position: relative;
+   top: -40px;
+   /* background-image: linear-gradient(
+      to right,
+      #b8cbb8 0%,
+      #b8cbb8 0%,
+      #b465da 0%,
+      #cf6cc9 33%,
+      #ee609c 66%,
+      #ee609c 100%
+   ); */
 }
 
 .img-login {
-    background-image: url("../img/img_login.svg");
-    height: 150px;
-    width: 200px;
-    background-size: 100% 100%;
-    position: relative;
-    left: 180px;
-    top: -15px;
-    z-index: 1;
+   background-image: url("../img/img_login.svg");
+   height: 150px;
+   width: 200px;
+   background-size: 100% 100%;
+   position: relative;
+   left: 180px;
+   top: -15px;
+   z-index: 1;
+}
+
+.btnn-login {
+   /* background: #8e2de2; fallback for old browsers */
+   background-image: linear-gradient(
+      to right,
+      #b8cbb8 0%,
+      #b8cbb8 0%,
+      #b465da 0%,
+      #cf6cc9 33%,
+      #ee609c 66%,
+      #ee609c 100%
+   );
 }

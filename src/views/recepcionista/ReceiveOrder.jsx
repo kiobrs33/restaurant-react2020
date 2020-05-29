@@ -12,7 +12,7 @@ import {
    Spinner,
 } from "reactstrap";
 
-// Importando METODOS para la conexion con la STORE de REDUX
+// REDUX
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
@@ -21,14 +21,14 @@ import {
    startSubmitOrder,
 } from "../../redux-config/actions/actions";
 
+// Componentes
+import Map from "../administrador/googlemaps/GoogleMap";
+
 // Importando ICONOS FONTAWESOME
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
-
-// MAPAS
-import Map from "../administrador/googlemaps/GoogleMap";
-
 import user from "../../assets/img/default-avatar.png";
+import loading1 from "../../assets/img/loading/loading1.svg";
 
 class ReceiveOrder extends React.Component {
    state = {
@@ -45,17 +45,16 @@ class ReceiveOrder extends React.Component {
          id_order: id_order,
       });
 
-      // Disparando para obtener ORDER y obtener SENDERS
+      // REDUX - actions
       this.props.startGetOrder(id_order);
       this.props.startGetSenders();
    };
 
-   handleListOrders = () => {
+   redirectListOrders = () => {
       this.props.history.push("/recepcionist/orders");
    };
 
-   // Funcion para escoger TRABAJADOR
-   handleEscogerSender = (obj) => {
+   selectSender = (obj) => {
       this.setState({
          id_sender: obj._id,
          name_sender: obj.info.name,
@@ -63,39 +62,56 @@ class ReceiveOrder extends React.Component {
       });
    };
 
-   // Funcion para lanzar ATENDER EL PEDIDO
+   // Funcion para atender Pedido
    handleSubmit = (event) => {
       var fecha = new Date(); //Fecha actual
       var mes = fecha.getMonth() + 1; //obteniendo mes
       var dia = fecha.getDate(); //obteniendo dia
       var ano = fecha.getFullYear();
-      console.log(fecha);
-
-      var dateh = Date.parse(`${ano}/${mes}/${dia}`);
+      let nowDate = `${ano}/${mes}/${dia}`;
 
       this.props.startSubmitOrder(
          "roading",
          this.state.id_order,
          this.state.id_sender,
-         `${ano}/${mes}/${dia}`
+         nowDate
       );
       this.props.history.push("/recepcionist/orders");
       event.preventDefault();
    };
 
    render() {
-      // URL MAP
+      // URL - GOOGLEMAP
       const mapURL =
          "https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDBUCi_YsR1AQdmx48i3x1ZIBV5hQ4015Q";
+
       const { order, workersSenders } = this.props;
+
+      if (Object.keys(order).length === 0) {
+         return (
+            <div className="content">
+               <div align="center">
+                  <img src={loading1} />
+               </div>
+            </div>
+         );
+      }
+
       if (order.id_user) {
          var id_pedido = order._id;
          var id_cliente = order.id_user._id;
          var nombres_cliente = order.id_user.info.name;
          var apellidos_cliente = order.id_user.info.lastname;
          var direccion_pedido = order.adress.adress_name;
-         var detalles_pedidos = order.details_orders;
-         console.log(order.adress.adress_latitud);
+         var details_orders = order.details_orders;
+
+         var precioTotal = 0;
+         var igv;
+
+         details_orders.map((d) => {
+            precioTotal += parseFloat(d.price_actuality * d.quantity);
+         });
+         igv = precioTotal / 1.18;
       }
 
       return (
@@ -105,52 +121,33 @@ class ReceiveOrder extends React.Component {
                   <Col md="10">
                      <Card className="card-user">
                         <CardHeader>
-                           <CardTitle tag="h5">
-                              Pedido {order.id_user ? id_pedido : "Cargando.."}
-                           </CardTitle>
+                           <CardTitle tag="h5">Pedido {id_pedido}</CardTitle>
                         </CardHeader>
                         <CardBody>
                            <Form onSubmit={this.handleSubmit}>
                               <Row>
                                  <Col md="6">
                                     <h6>Id Cliente:</h6>
-                                    <p>
-                                       {order.id_user
-                                          ? id_cliente
-                                          : "Cargando.."}
-                                    </p>
+                                    <p>{id_cliente}</p>
                                  </Col>
                                  <Col md="6">
                                     <h6>Datos:</h6>
-                                    <p>
-                                       {order.id_user
-                                          ? `${nombres_cliente} ${apellidos_cliente}`
-                                          : "Cargando.."}
-                                    </p>
+                                    <p>{nombres_cliente}</p>
                                  </Col>
                               </Row>
                               <Row>
                                  <Col md="6">
                                     <h6>Direccion:</h6>
-                                    <p>
-                                       {order.id_user
-                                          ? direccion_pedido
-                                          : "Cargando.."}
-                                    </p>
+                                    <p>{apellidos_cliente}</p>
                                  </Col>
                                  <Col md="6">
                                     <h6>Fecha Pedido:</h6>
-                                    <p>
-                                       {order.id_user
-                                          ? order.date.date_issue
-                                          : "Cargando.."}
-                                    </p>
+                                    <p>{direccion_pedido}</p>
                                  </Col>
                               </Row>
                               <Row>
                                  <Col md="12">
-                                    <h6>Detalles del Pedido:</h6>
-
+                                    <h6>Detalles:</h6>
                                     <Table striped responsive>
                                        <thead className="text-primary">
                                           <tr>
@@ -161,34 +158,17 @@ class ReceiveOrder extends React.Component {
                                           </tr>
                                        </thead>
                                        <tbody>
-                                          {order.id_user ? (
-                                             detalles_pedidos.map((o) => (
-                                                <tr key={o._id}>
-                                                   <td>{o.id_dish.name}</td>
-                                                   <td>{o.price_actuality}</td>
-                                                   <td>{o.quantity}</td>
-                                                   <td>
-                                                      {o.price_actuality *
-                                                         o.quantity}
-                                                   </td>
-                                                </tr>
-                                             ))
-                                          ) : (
-                                             <tr>
-                                                <td
-                                                   colSpan="4"
-                                                   className="text-center"
-                                                >
-                                                   <Spinner
-                                                      style={{
-                                                         width: "4rem",
-                                                         height: "4rem",
-                                                      }}
-                                                      color="dark"
-                                                   />
+                                          {details_orders.map((o) => (
+                                             <tr key={o._id}>
+                                                <td>{o.id_dish.name}</td>
+                                                <td>{o.price_actuality}</td>
+                                                <td>{o.quantity}</td>
+                                                <td>
+                                                   {o.price_actuality *
+                                                      o.quantity}
                                                 </td>
                                              </tr>
-                                          )}
+                                          ))}
                                        </tbody>
                                     </Table>
                                  </Col>
@@ -205,16 +185,12 @@ class ReceiveOrder extends React.Component {
                                     <Table striped>
                                        <tbody>
                                           <tr>
-                                             <th>Subtotal:</th>
-                                             <td>S/234.00</td>
-                                          </tr>
-                                          <tr>
-                                             <th>Descuento:</th>
-                                             <td>S/232.00</td>
-                                          </tr>
-                                          <tr>
                                              <th>Total:</th>
-                                             <td>0</td>
+                                             <td>S/{precioTotal}</td>
+                                          </tr>
+                                          <tr>
+                                             <th>IGV:</th>
+                                             <td>S/{igv}</td>
                                           </tr>
                                        </tbody>
                                     </Table>
@@ -226,8 +202,7 @@ class ReceiveOrder extends React.Component {
                               </h5>
                               <div
                                  style={{
-                                    height: "auto",
-                                    overflowX: "scroll",
+                                    overflowX: "auto",
                                     display: "flex",
                                  }}
                               >
@@ -238,21 +213,22 @@ class ReceiveOrder extends React.Component {
                                           style={{
                                              background:
                                                 "linear-gradient(120deg,#16BFFD ,#CB3066)",
-                                             width: "150px",
+
                                              borderRadius: "10px",
                                              cursor: "pointer",
                                           }}
                                           key={w._id}
-                                          onClick={() =>
-                                             this.handleEscogerSender(w)
-                                          }
+                                          onClick={() => this.selectSender(w)}
                                        >
                                           <div>
                                              <img
                                                 alt="..."
                                                 className="rounded-circle"
                                                 height="50px"
-                                                src={w.img || user}
+                                                src={
+                                                   `https://rest-back-end.herokuapp.com/api/worker/showImage/${w._id}` ||
+                                                   user
+                                                }
                                              />
                                           </div>
                                           <span
@@ -322,7 +298,7 @@ class ReceiveOrder extends React.Component {
                                     <Button
                                        className="btn-round"
                                        color="danger"
-                                       onClick={this.handleListOrders}
+                                       onClick={this.redirectListOrders}
                                        block
                                     >
                                        <FontAwesomeIcon icon={faArrowLeft} />{" "}

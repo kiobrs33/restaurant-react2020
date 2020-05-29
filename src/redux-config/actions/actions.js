@@ -1,5 +1,6 @@
 // Se crea el IDENTIFICADOR por separado y luego se pasa a la ACCION
-export const SET_LOGIN = "SET_LOGIN";
+export const START_SET_LOGIN = "START_SET_LOGIN";
+export const END_SET_LOGIN = "END_SET_LOGIN";
 export const START_GET_ORDERS = "START_GET_ORDERS";
 export const END_GET_ORDERS = "END_GET_ORDERS";
 export const NEW_ORDER = "NEW_ORDER"; //Sin usar
@@ -20,13 +21,17 @@ export const START_GET_CUSTOMER = "START_GET_CUSTOMER";
 export const END_GET_CUSTOMER = "END_GET_CUSTOMER";
 export const SUBMIT_NEW_DISH = "SUBMIT_NEW_DISH";
 export const SUBMIT_NEW_CATEGORY = "SUBMIT_NEW_CATEGORY";
+export const START_GET_COORDENADAS = "START_GET_COORDENADAS";
+export const END_GET_COORDENADAS = "END_GET_COORDENADAS";
 
 // Se exporta una FUNCION que recibe VALOR o DATA desde el COMPONENTE
 // TYPE es el identificador de la ACCION
-export const setLogin = (val1, val2) => ({
-   type: SET_LOGIN,
-   username: val1,
-   password: val2,
+export const startSetLogin = (datos) => ({
+   type: START_SET_LOGIN,
+   datos,
+});
+export const endSetLogin = () => ({
+   type: END_SET_LOGIN,
 });
 
 // Para obtener una lista de PEDIDOS
@@ -119,6 +124,15 @@ export const submitNewDish = (data) => ({
 export const submitNewCategory = (data) => ({
    type: SUBMIT_NEW_CATEGORY,
    data,
+});
+
+// Obtener coordenas para trazar linea de viaje
+export const startGetCoordenadas = (data) => ({
+   type: START_GET_COORDENADAS,
+   data,
+});
+export const endGetCoordenadas = () => ({
+   type: END_GET_COORDENADAS,
 });
 
 // export const newOrder = (payload) => ({
